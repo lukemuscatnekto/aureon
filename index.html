@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aureon — Your Performance Intelligence Platform</title>
+<meta name="description" content="Aureon replaces every app in your fitness stack with one intelligent platform. Training, nutrition, recovery, and AI coaching — all connected."/>
+<meta name="theme-color" content="#0A0A09"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"/>
+<!-- Open Graph -->
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Aureon — Your Performance Intelligence Platform"/>
+<meta property="og:description" content="Stop duct-taping 5 apps together. Aureon unifies workout tracking, nutrition, AI coaching, and recovery into one platform built for serious lifters."/>
+<meta property="og:site_name" content="Aureon"/>
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Aureon — Performance Intelligence Platform"/>
+<meta name="twitter:description" content="One intelligent platform for training, nutrition, recovery, and AI coaching. Replace your entire fitness app stack."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --green: #1D9E75;
+    --green-dim: rgba(29,158,117,0.15);
+    --green-line: rgba(29,158,117,0.3);
+    --white: #F2F0EB;
+    --muted: #7A7870;
+    --muted-light: #A8A69E;
+    --bg: #0A0A09;
+    --bg2: #111110;
+    --bg3: #161614;
+    --border: rgba(255,255,255,0.07);
+    --border-strong: rgba(255,255,255,0.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    border-bottom: 0.5px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(10,10,9,0.92);
+    backdrop-filter: blur(12px);
+    border-color: var(--border);
+  }
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--green); }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 8px 18px;
+    border: 1px solid var(--green-line);
+    border-radius: 4px;
+    color: var(--green) !important;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--green-dim) !important; border-color: var(--green) !important; color: var(--white) !important; }
+
+  /* ── MOBILE NAV ── */
+  .nav-burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 102;
+  }
+  .nav-burger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--white);
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; }
+  .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .nav-mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,9,0.96);
+    backdrop-filter: blur(16px);
+    z-index: 101;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-mobile-overlay.open { display: flex; }
+  .nav-mobile-overlay a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-mobile-overlay a:hover { color: var(--green); }
+  .nav-mobile-overlay .nav-cta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    padding: 12px 28px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(29,158,117,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29,158,117,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+  }
+  .hero-glow {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(29,158,117,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .hero-headline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(64px, 10vw, 120px);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.35s forwards;
+  }
+  .hero-headline .accent { color: var(--green); }
+  .hero-headline .thin { font-weight: 400; color: var(--muted); }
+  .hero-sub {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--muted-light);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+  .hero-form {
+    display: flex;
+    gap: 0;
+    max-width: 460px;
+    width: 100%;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.65s forwards;
+  }
+  .hero-input {
+    flex: 1;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-strong);
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .hero-input::placeholder { color: var(--muted); }
+  .hero-input:focus { border-color: var(--green-line); }
+  .hero-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    background: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .hero-btn:hover { background: #0F6E56; }
+  .hero-note {
+    margin-top: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 80px;
+    padding-top: 48px;
+    border-top: 0.5px solid var(--border);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1s forwards;
+  }
+  .hero-stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 36px;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .hero-stat-num span { color: var(--green); }
+  .hero-stat-lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.2s forwards;
+  }
+  .hero-scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--green), transparent);
+    animation: pulse 2s ease infinite;
+  }
+  .hero-scroll-lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    writing-mode: horizontal-tb;
+  }
+
+  /* ── PROBLEM ── */
+  .section {
+    position: relative;
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-heading {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+  .section-heading .dim { color: var(--muted); }
+  .section-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted-light);
+    max-width: 480px;
+    line-height: 1.75;
+    margin-bottom: 64px;
+  }
+
+  /* ── APP STACK ── */
+  .app-stack {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 0;
+    align-items: center;
+    margin-bottom: 80px;
+  }
+  .app-stack-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .app-chip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s;
+  }
+  .app-chip:hover { border-color: var(--border-strong); }
+  .app-chip-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    background: var(--bg3);
+  }
+  .app-chip-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+  }
+  .app-chip-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  .app-chip-price {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .app-stack-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .arrow-line {
+    width: 1px;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent, var(--green), transparent);
+  }
+  .arrow-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--green);
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+  }
+  .app-stack-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: var(--bg2);
+    border: 1px solid var(--green-line);
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .app-stack-right::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+  }
+  .aureon-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green);
+    border: 1px solid var(--green-line);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+  .app-stack-right h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 48px;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .app-stack-right p {
+    font-size: 13px;
+    color: var(--muted-light);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .price-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .price-tag-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 0.5px;
+    background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+  }
+
+  /* ── PILLARS ── */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .pillar-card {
+    background: var(--bg);
+    padding: 36px 28px;
+    position: relative;
+    transition: background 0.25s;
+    cursor: default;
+  }
+  .pillar-card:hover { background: var(--bg2); }
+  .pillar-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--green);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+  .pillar-card:hover::after { transform: scaleX(1); }
+  .pillar-phase {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .pillar-phase.mvp { background: rgba(29,158,117,0.1); color: var(--green); }
+  .pillar-phase.p2 { background: rgba(55,138,221,0.1); color: #5BAAE6; }
+  .pillar-phase.p3 { background: rgba(186,117,23,0.1); color: #C9933A; }
+  .pillar-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .pillar-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .pillar-desc {
+    font-size: 13px;
+    color: var(--muted-light);
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+  .pillar-replaces {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    border-top: 0.5px solid var(--border);
+    padding-top: 12px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-bottom: 80px;
+  }
+  .how-row:last-child { margin-bottom: 0; }
+  .how-row.reverse .how-visual { order: -1; }
+  .how-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 100px;
+    line-height: 1;
+    color: rgba(255,255,255,0.04);
+    margin-bottom: -20px;
+    display: block;
+    letter-spacing: -0.02em;
+  }
+  .how-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .how-body {
+    font-size: 14px;
+    color: var(--muted-light);
+    line-height: 1.75;
+  }
+  .how-visual {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .how-visual::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--green-line), transparent);
+  }
+  .metric-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+  }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-label { color: var(--muted-light); }
+  .metric-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--white);
+    font-weight: 500;
+  }
+  .metric-bar-wrap {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    margin: 0 16px;
+    overflow: hidden;
+  }
+  .metric-bar {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--green);
+  }
+  .ai-bubble {
+    background: rgba(29,158,117,0.08);
+    border: 0.5px solid var(--green-line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--muted-light);
+    line-height: 1.6;
+    position: relative;
+  }
+  .ai-bubble::before {
+    content: 'AI Coach';
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    background: var(--bg2);
+    padding: 0 6px;
+    text-transform: uppercase;
+  }
+  .user-bubble {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--muted-light);
+    line-height: 1.6;
+    text-align: right;
+    position: relative;
+  }
+  .user-bubble::before {
+    content: 'You';
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    background: var(--bg2);
+    padding: 0 6px;
+    text-transform: uppercase;
+  }
+
+  /* ── PRICING ── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .pricing-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .pricing-card.featured {
+    border-color: var(--green-line);
+    position: relative;
+  }
+  .pricing-card.featured::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--green);
+  }
+  .pricing-head {
+    padding: 28px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .pricing-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .pricing-card.featured .pricing-name { color: var(--green); }
+  .pricing-price {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .pricing-price sup {
+    font-size: 20px;
+    vertical-align: super;
+    color: var(--muted-light);
+  }
+  .pricing-price-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .pricing-body {
+    padding: 28px;
+  }
+  .pricing-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 13px;
+    color: var(--muted-light);
+    line-height: 1.4;
+  }
+  .pricing-feature .check {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .pricing-feature .check.yes { color: var(--green); }
+  .pricing-feature .check.no { color: rgba(255,255,255,0.15); }
+  .pricing-cta {
+    display: block;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 14px;
+    border-top: 0.5px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    width: 100%;
+  }
+  .pricing-cta:hover { color: var(--white); background: rgba(255,255,255,0.03); }
+  .pricing-card.featured .pricing-cta {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  .pricing-card.featured .pricing-cta:hover { background: #0F6E56; }
+
+  /* ── FINAL CTA ── */
+  .final-cta {
+    text-align: center;
+    padding: 140px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(29,158,117,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .final-cta .hero-headline { font-size: clamp(48px, 8vw, 96px); margin: 0 auto 24px; max-width: 700px; }
+  .final-cta .hero-sub { margin: 0 auto 40px; }
+  .final-cta .hero-form { margin: 0 auto; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .footer-logo span { color: var(--green); }
+  .footer-copy {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--white); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success-msg {
+    display: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    letter-spacing: 0.06em;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    overflow: hidden;
+    padding: 14px 0;
+    background: var(--bg2);
+  }
+  .ticker {
+    display: flex;
+    gap: 64px;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .ticker-item span { color: var(--green); margin-right: 8px; }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .nav-burger { display: flex; }
+    .section { padding: 80px 24px; }
+    .app-stack { grid-template-columns: 1fr; gap: 24px; }
+    .app-stack-arrow { display: none; }
+    .pillars-grid { grid-template-columns: 1fr 1fr; }
+    .how-row { grid-template-columns: 1fr; gap: 40px; }
+    .how-row.reverse .how-visual { order: 0; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+    .hero-stats { gap: 28px; flex-wrap: wrap; justify-content: center; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .footer-links { justify-content: center; }
+  }
+  @media (max-width: 600px) {
+    .pillars-grid { grid-template-columns: 1fr; }
+    .hero-form { flex-direction: column; }
+    .hero-input { border-right: 1px solid var(--border-strong); border-bottom: none; border-radius: 6px 6px 0 0; }
+    .hero-btn { border-radius: 0 0 6px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="#">Aureon<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#product">Product</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#waitlist" class="nav-cta">Join waitlist</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<ul class="nav-mobile-overlay" id="nav-mobile">
+  <li><a href="#product" class="mobile-link">Product</a></li>
+  <li><a href="#how" class="mobile-link">How it works</a></li>
+  <li><a href="#pricing" class="mobile-link">Pricing</a></li>
+  <li><a href="#waitlist" class="nav-cta mobile-link">Join waitlist</a></li>
+</ul>
+
+<!-- HERO -->
+<section class="hero" id="waitlist">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow">Performance intelligence platform — Coming 2026</div>
+  <h1 class="hero-headline">
+    Train like<br/>
+    a <span class="accent">pro</span><br/>
+    <span class="thin">athlete.</span>
+  </h1>
+  <p class="hero-sub">Aureon replaces every app in your stack with one intelligent platform that understands your training, nutrition, recovery, and performance — all in one place.</p>
+  <div class="hero-form" id="hero-form">
+    <input class="hero-input" type="email" id="hero-email" placeholder="your@email.com"/>
+    <button class="hero-btn" onclick="joinWaitlist('hero')">Join waitlist</button>
+  </div>
+  <div class="success-msg" id="hero-success">✓ You're on the list. We'll be in touch.</div>
+  <p class="hero-note">Free early access · No spam · Unsubscribe anytime</p>
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-num"><span>6</span> apps</div>
+      <div class="hero-stat-lbl">Replaced by Aureon</div>
+    </div>
+    <div>
+      <div class="hero-stat-num"><span>1</span> platform</div>
+      <div class="hero-stat-lbl">Everything connected</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">24<span>/7</span></div>
+      <div class="hero-stat-lbl">AI performance coach</div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span class="hero-scroll-lbl">Scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item"><span>▸</span> Workout intelligence</span>
+    <span class="ticker-item"><span>▸</span> Adaptive nutrition</span>
+    <span class="ticker-item"><span>▸</span> Recovery tracking</span>
+    <span class="ticker-item"><span>▸</span> AI coaching</span>
+    <span class="ticker-item"><span>▸</span> Smart programming</span>
+    <span class="ticker-item"><span>▸</span> Science hub</span>
+    <span class="ticker-item"><span>▸</span> Performance intelligence</span>
+    <span class="ticker-item"><span>▸</span> Workout intelligence</span>
+    <span class="ticker-item"><span>▸</span> Adaptive nutrition</span>
+    <span class="ticker-item"><span>▸</span> Recovery tracking</span>
+    <span class="ticker-item"><span>▸</span> AI coaching</span>
+    <span class="ticker-item"><span>▸</span> Smart programming</span>
+    <span class="ticker-item"><span>▸</span> Science hub</span>
+    <span class="ticker-item"><span>▸</span> Performance intelligence</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section reveal" id="problem">
+  <div class="section-eyebrow">The problem</div>
+  <h2 class="section-heading">You're running<br/><span class="dim">5 apps</span><br/>for one goal.</h2>
+  <p class="section-sub">Every serious lifter is duct-taping together a fragmented stack of tools that were never designed to talk to each other. The result is wasted money, split focus, and zero unified picture of your performance.</p>
+  <div class="app-stack">
+    <div class="app-stack-left">
+      <div class="app-chip">
+        <div class="app-chip-icon">💪</div>
+        <div>
+          <div class="app-chip-name">Hevy / Strong</div>
+          <div class="app-chip-sub">Workout logging</div>
+        </div>
+        <div class="app-chip-price">£4.99/mo</div>
+      </div>
+      <div class="app-chip">
+        <div class="app-chip-icon">🥩</div>
+        <div>
+          <div class="app-chip-name">MyFitnessPal</div>
+          <div class="app-chip-sub">Calorie & macro tracking</div>
+        </div>
+        <div class="app-chip-price">£8.99/mo</div>
+      </div>
+      <div class="app-chip">
+        <div class="app-chip-icon">📋</div>
+        <div>
+          <div class="app-chip-name">RP Hypertrophy</div>
+          <div class="app-chip-sub">Training programming</div>
+        </div>
+        <div class="app-chip-price">£12.99/mo</div>
+      </div>
+      <div class="app-chip">
+        <div class="app-chip-icon">🔋</div>
+        <div>
+          <div class="app-chip-name">WHOOP</div>
+          <div class="app-chip-sub">Recovery & HRV</div>
+        </div>
+        <div class="app-chip-price">£18.99/mo</div>
+      </div>
+      <div class="app-chip">
+        <div class="app-chip-icon">🧬</div>
+        <div>
+          <div class="app-chip-name">YouTube / Reddit</div>
+          <div class="app-chip-sub">Science & guidance</div>
+        </div>
+        <div class="app-chip-price">Time wasted</div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;padding:12px 0">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)">Total: <span style="color:var(--white);font-weight:500">£45–60/mo + none of it connects</span></div>
+      </div>
+    </div>
+    <div class="app-stack-arrow">
+      <div class="arrow-line"></div>
+      <div class="arrow-text">Becomes</div>
+      <div class="arrow-line"></div>
+    </div>
+    <div class="app-stack-right">
+      <div class="aureon-pill">One platform</div>
+      <h3>Aureon</h3>
+      <p>All six pillars. Fully connected.<br/>AI that understands all of it.</p>
+      <div class="price-tag">£14.99/mo</div>
+      <div class="price-tag-sub">Everything included — Pro plan</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRODUCT / PILLARS -->
+<section class="section reveal" id="product">
+  <div class="section-eyebrow">The product</div>
+  <h2 class="section-heading">Six pillars.<br/><span class="dim">One OS.</span></h2>
+  <p class="section-sub">Each pillar replaces a standalone app. Together they create something no standalone app can — complete performance intelligence.</p>
+  <div class="pillars-grid">
+    <div class="pillar-card">
+      <span class="pillar-phase mvp">MVP · Day one</span>
+      <span class="pillar-icon">💪</span>
+      <div class="pillar-name">Workout tracker</div>
+      <p class="pillar-desc">Log every session with auto-progression, volume landmarks, plateau detection and smart rest timers. The most intelligent workout log ever built.</p>
+      <div class="pillar-replaces">Replaces → Hevy, Strong, JEFIT</div>
+    </div>
+    <div class="pillar-card">
+      <span class="pillar-phase mvp">MVP · Day one</span>
+      <span class="pillar-icon">🥩</span>
+      <div class="pillar-name">Nutrition</div>
+      <p class="pillar-desc">Dynamic macros that automatically adjust on training days vs rest days. Calorie targets tied to what you actually lifted — not a fixed number.</p>
+      <div class="pillar-replaces">Replaces → MyFitnessPal, Cronometer</div>
+    </div>
+    <div class="pillar-card">
+      <span class="pillar-phase mvp">MVP · Day one</span>
+      <span class="pillar-icon">🤖</span>
+      <div class="pillar-name">AI coach</div>
+      <p class="pillar-desc">Post-session analysis, science-based answers, and coaching that knows your full training history. Available 24/7 for the price of one PT session per year.</p>
+      <div class="pillar-replaces">Replaces → £150–300/mo human coach</div>
+    </div>
+    <div class="pillar-card">
+      <span class="pillar-phase p2">Phase 2</span>
+      <span class="pillar-icon">📋</span>
+      <div class="pillar-name">Programming</div>
+      <p class="pillar-desc">Periodised training blocks that auto-regulate based on your recovery and performance data. Built on proven hypertrophy and strength science.</p>
+      <div class="pillar-replaces">Replaces → RP Hypertrophy, Boostcamp</div>
+    </div>
+    <div class="pillar-card">
+      <span class="pillar-phase p2">Phase 2</span>
+      <span class="pillar-icon">🔋</span>
+      <div class="pillar-name">Recovery</div>
+      <p class="pillar-desc">Daily readiness score that actually changes your training session. Connects with WHOOP, Garmin, and Apple Health for real physiological data.</p>
+      <div class="pillar-replaces">Replaces → WHOOP app, Garmin Connect</div>
+    </div>
+    <div class="pillar-card">
+      <span class="pillar-phase p3">Phase 3</span>
+      <span class="pillar-icon">🧬</span>
+      <div class="pillar-name">Science hub</div>
+      <p class="pillar-desc">Evidence-based protocols, supplement rankings, and research summaries written in plain language. No bro-science. No BS. Just what the data says.</p>
+      <div class="pillar-replaces">Replaces → YouTube rabbit holes, Reddit</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-eyebrow">How it works</div>
+  <h2 class="section-heading" style="margin-bottom:80px">Performance<br/><span class="dim">intelligence.</span></h2>
+
+  <div class="how-row reveal">
+    <div class="how-text">
+      <span class="how-num">01</span>
+      <h3 class="how-title">Log your session. Get instant analysis.</h3>
+      <p class="how-body">Every workout you log feeds Aureon's performance model. Volume, intensity, RPE, progressive overload — it all gets processed and turned into actionable insight, not just numbers on a screen.</p>
+    </div>
+    <div class="how-visual">
+      <div class="metric-row"><span class="metric-label">Squat volume</span><div class="metric-bar-wrap"><div class="metric-bar" style="width:82%"></div></div><span class="metric-val">+12% this week</span></div>
+      <div class="metric-row"><span class="metric-label">Weekly tonnage</span><div class="metric-bar-wrap"><div class="metric-bar" style="width:71%"></div></div><span class="metric-val">24,800 kg</span></div>
+      <div class="metric-row"><span class="metric-label">Avg RPE</span><div class="metric-bar-wrap"><div class="metric-bar" style="width:75%"></div></div><span class="metric-val">7.5 / 10</span></div>
+      <div class="metric-row"><span class="metric-label">Progressive overload</span><div class="metric-bar-wrap"><div class="metric-bar" style="width:90%"></div></div><span class="metric-val">On track ✓</span></div>
+      <div class="metric-row"><span class="metric-label">1RM estimate</span><div class="metric-bar-wrap"><div class="metric-bar" style="width:66%"></div></div><span class="metric-val">185 kg</span></div>
+    </div>
+  </div>
+
+  <div class="how-row reverse reveal">
+    <div class="how-text">
+      <span class="how-num">02</span>
+      <h3 class="how-title">Ask your coach anything. Get real answers.</h3>
+      <p class="how-body">The AI coach knows everything — your training history, your nutrition, your recovery. Ask it why you're not progressing, what to eat before a heavy squat day, or whether you're overtraining. It tells you exactly what it sees in your data.</p>
+    </div>
+    <div class="how-visual">
+      <div class="user-bubble" style="margin-bottom:10px">Why haven't my squat numbers moved in 3 weeks?</div>
+      <div class="ai-bubble">Looking at your last 21 days — your weekly volume has been consistent, but your average sleep is 5.8 hours and your Tuesday sessions (your heaviest squat day) come after your most demanding Monday cardio. Your CNS isn't recovered. Try pushing squats to Wednesday and watch the numbers move.</div>
+    </div>
+  </div>
+
+  <div class="how-row reveal">
+    <div class="how-text">
+      <span class="how-num">03</span>
+      <h3 class="how-title">Nutrition that adapts to your training.</h3>
+      <p class="how-body">On a heavy leg day your targets are different from a rest day. Aureon automatically adjusts your calorie and macro targets based on what you lifted, your energy expenditure, and your current physique goal — bulk, cut, or maintain.</p>
+    </div>
+    <div class="how-visual">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:var(--bg3);border-radius:8px;padding:14px;border:0.5px solid var(--border)">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Training day</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;color:var(--white);line-height:1">3,100<span style="font-size:14px;color:var(--muted-light);font-weight:400"> kcal</span></div>
+          <div style="font-size:11px;color:var(--muted-light);margin-top:6px">P: 200g · C: 360g · F: 80g</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:14px;border:0.5px solid var(--border)">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Rest day</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;color:var(--white);line-height:1">2,400<span style="font-size:14px;color:var(--muted-light);font-weight:400"> kcal</span></div>
+          <div style="font-size:11px;color:var(--muted-light);margin-top:6px">P: 200g · C: 240g · F: 80g</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--green);letter-spacing:0.06em;padding:10px 12px;background:rgba(29,158,117,0.06);border-radius:6px;border:0.5px solid var(--green-line)">↳ Targets updated automatically based on today's session</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section class="section reveal" id="pricing" style="text-align:center">
+  <div class="section-eyebrow" style="text-align:center">Pricing</div>
+  <h2 class="section-heading" style="text-align:center;margin-bottom:16px">Simple.<br/><span class="dim">No surprises.</span></h2>
+  <p class="section-sub" style="margin:0 auto 56px;text-align:center">Start free. Upgrade when you're ready to unlock the full intelligence layer.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-head">
+        <div class="pricing-name">Free</div>
+        <div class="pricing-price"><sup>£</sup>0</div>
+        <div class="pricing-price-sub">Forever free</div>
+      </div>
+      <div class="pricing-body">
+        <div class="pricing-feature"><span class="check yes">✓</span> Workout tracker (unlimited)</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> Exercise library</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> Basic nutrition targets</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> Progress charts</div>
+        <div class="pricing-feature"><span class="check no">✗</span> AI coaching</div>
+        <div class="pricing-feature"><span class="check no">✗</span> Smart programming</div>
+        <div class="pricing-feature"><span class="check no">✗</span> Recovery intelligence</div>
+        <div class="pricing-feature"><span class="check no">✗</span> Science hub</div>
+      </div>
+      <button class="pricing-cta" onclick="document.getElementById('hero-email').focus()">Join waitlist</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-head">
+        <div class="pricing-name">Pro</div>
+        <div class="pricing-price"><sup>£</sup>14<span style="font-size:22px">.99</span></div>
+        <div class="pricing-price-sub">Per month</div>
+      </div>
+      <div class="pricing-body">
+        <div class="pricing-feature"><span class="check yes">✓</span> Everything in Free</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> AI coach — unlimited, data-aware</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> Adaptive programming blocks</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> Dynamic nutrition (adjusts daily)</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> Recovery & readiness scoring</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> Performance bottleneck detection</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> Science hub access</div>
+        <div class="pricing-feature"><span class="check yes">✓</span> Wearable integrations</div>
+      </div>
+      <button class="pricing-cta" onclick="document.getElementById('hero-email').focus();window.scrollTo({top:0,behavior:'smooth'})">Get early access ↑</button>
+    </div>
+  </div>
+  <p style="margin-top:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.04em">Early waitlist members get 3 months free Pro on launch</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- FINAL CTA -->
+<section class="final-cta reveal">
+  <h2 class="hero-headline">Stop<br/><span class="accent">duct-taping</span><br/><span class="thin">your stack.</span></h2>
+  <p class="hero-sub">Join the waitlist and be first to access the performance intelligence platform built for people who take training seriously.</p>
+  <div class="hero-form" id="final-form">
+    <input class="hero-input" type="email" id="final-email" placeholder="your@email.com"/>
+    <button class="hero-btn" onclick="joinWaitlist('final')">Join waitlist</button>
+  </div>
+  <div class="success-msg" id="final-success">✓ You're on the list. We'll be in touch.</div>
+  <p class="hero-note" style="margin-top:16px">Free early access · No spam · Unsubscribe anytime</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Aureon<span>.</span></div>
+  <div class="footer-copy">© 2026 Aureon. All rights reserved.</div>
+  <ul class="footer-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Mobile menu
+  const burger = document.getElementById('nav-burger');
+  const mobileMenu = document.getElementById('nav-mobile');
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+  });
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      burger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Waitlist signup
+  function joinWaitlist(source) {
+    const emailEl = document.getElementById(source === 'hero' ? 'hero-email' : 'final-email');
+    const formEl = document.getElementById(source === 'hero' ? 'hero-form' : 'final-form');
+    const successEl = document.getElementById(source === 'hero' ? 'hero-success' : 'final-success');
+    const email = emailEl.value.trim();
+    if (!email || !email.includes('@')) {
+      emailEl.style.borderColor = 'rgba(226,75,74,0.6)';
+      setTimeout(() => emailEl.style.borderColor = '', 1500);
+      return;
+    }
+    formEl.style.display = 'none';
+    successEl.style.display = 'block';
+    // In production: POST to your backend / Mailchimp / ConvertKit here
+    console.log('Waitlist signup:', email);
+  }
+
+  // Enter key on inputs
+  document.getElementById('hero-email').addEventListener('keydown', e => { if (e.key === 'Enter') joinWaitlist('hero'); });
+  document.getElementById('final-email').addEventListener('keydown', e => { if (e.key === 'Enter') joinWaitlist('final'); });
+</script>
+</body>
+</html>
